@@ -1,6 +1,10 @@
 module Rasti
   module Web
     class Parameters
+
+      extend Forwardable
+
+      def_delegators :@hash, :inspect, :to_s, :each, :keys, :values
       
       def initialize(hash)
         @hash = Hash[hash.map { |k,v| [k.to_s, v] }]
@@ -13,14 +17,6 @@ module Rasti
 
       def to_h
         @hash
-      end
-
-      def inspect
-        @hash.inspect
-      end
-
-      def to_s
-        @hash.to_s
       end
 
     end

@@ -5,7 +5,7 @@ require 'rasti/web/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'rasti-web'
-  spec.version       = Tools::Web::VERSION
+  spec.version       = Rasti::Web::VERSION
   spec.authors       = ['Gabriel Naiman']
   spec.email         = ['gabynaiman@gmail.com']
   spec.summary       = 'Web blocks to build robust applications'

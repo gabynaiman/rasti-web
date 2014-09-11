@@ -33,6 +33,14 @@ module Rasti
         response.write text
       end
 
+      def status(status, text=nil, headers={})
+        response.status = status
+        response.write text if text
+        headers.each do |k,v|
+          response[k] = v
+        end
+      end
+
       private
 
       def render(template, locals={}, options={}, &block)
