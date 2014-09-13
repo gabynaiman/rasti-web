@@ -18,7 +18,7 @@ module Rasti
 
       def self.map(path, endpoint=nil, &block)
         rack.map path do
-          run endpoint || block
+          run endpoint || Endpoint.new(&block)
         end
       end
 

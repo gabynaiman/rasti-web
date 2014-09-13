@@ -10,7 +10,7 @@ module Rasti
 
       VERBS.each do |verb|
         define_method verb do |pattern, endpoint=nil, &block|
-          routes[verb] << Route.new(normalize(pattern), endpoint || block)
+          routes[verb] << Route.new(normalize(pattern), endpoint || Endpoint.new(&block))
         end
       end
 
