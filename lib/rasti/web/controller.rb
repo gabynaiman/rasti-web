@@ -7,7 +7,7 @@ module Rasti
       def initialize(request, response)
         @request = request
         @response = response
-        @render = Render.new response
+        @render = Render.new request, response
         @params = Parameters.new request.params
       end
 

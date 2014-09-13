@@ -4,7 +4,7 @@ module Rasti
 
       extend Forwardable
 
-      def_delegators :@hash, :inspect, :to_s, :each, :keys, :values
+      def_delegators :@hash, :inspect, :to_s, :each, :keys, :values, :merge
       
       def initialize(hash)
         @hash = Hash[hash.map { |k,v| [k.to_s, v] }]

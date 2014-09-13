@@ -2,21 +2,22 @@ module Rasti
   module Web
     class Render
 
-      attr_reader :response
+      attr_reader :request, :response, :view_context
 
-      def initialize(response)
+      def initialize(request, response)
+        @request = request
         @response = response
+        @view_context = ViewContext.new request, response
       end
 
       def view(template, locals={}, layout=nil)
         response['Content-Type'] = 'text/html'
-        partial = render template, locals
-        response.write render(layout || Web.default_layout, content: partial)
+        response.write view_context.render(layout || Web.default_layout) { view_context.render template, locals }
       end
 
       def partial(template, locals={})
         response['Content-Type'] = 'text/html'
-        response.write render(template, locals)
+        response.write view_context.render(template, locals)
       end
 
       def json(object)
@@ -39,24 +40,6 @@ module Rasti
         headers.each do |k,v|
           response[k] = v
         end
-      end
-
-      private
-
-      def render(template, locals={}, options={}, &block)
-        files = Web.template_engines.map { |e| File.join Web.views_path, "#{template}.#{e}" }
-        template_file = files.detect { |f| File.exists? f }
-
-        raise "Missing template #{template} [#{files.join(', ')}]" unless template_file
-                                  
-        tilt = cache.fetch template_file do
-          Tilt.new(template_file, options)
-        end
-        tilt.render(self, locals, &block)
-      end
-
-      def cache
-        Thread.current[:templates_cache] ||= Tilt::Cache.new
       end
 
     end
