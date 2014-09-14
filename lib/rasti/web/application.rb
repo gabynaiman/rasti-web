@@ -33,7 +33,7 @@ module Rasti
           env[PATH_PARAMS] = route.extract_params env['PATH_INFO']
           route.endpoint.call env
         else
-          not_found
+          not_found env['REQUEST_METHOD'], env['PATH_INFO']
         end
       end
 
@@ -43,8 +43,8 @@ module Rasti
         @rack ||= Rack::Builder.new
       end
 
-      def not_found
-        [404, {'Content-Type' => 'text/html'}, ['<h1>Not found</h1>']]
+      def not_found(method, path)
+        [404, {'Content-Type' => 'text/html'}, ["<h2>Not found</h2>#{method}: #{path}"]]
       end
 
     end
