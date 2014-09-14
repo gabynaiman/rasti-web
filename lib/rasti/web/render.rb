@@ -30,7 +30,13 @@ module Rasti
         response.write script
       end
 
+      def html(html)
+        response['Content-Type'] = 'text/html'
+        response.write html
+      end
+
       def text(text)
+        response['Content-Type'] = 'text/plain'
         response.write text
       end
 
