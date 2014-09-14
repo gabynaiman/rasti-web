@@ -5,20 +5,21 @@ module Rasti
       extend Forwardable
 
       def_delegators :request, :params, :session
+      def_delegators :response, :redirect
 
       attr_reader :request, :response, :render
 
-      def initialize(request, response)
+      def initialize(request, response, render)
         @request = request
         @response = response
-        @render = Render.new request, response
+        @render = render
       end
 
       def self.action(action_name)
         raise "Undefined action #{action_name} in #{name}" unless instance_methods.include? action_name.to_sym
         
-        Endpoint.new do |req, res|
-          self.new(req, res).public_send(action_name)
+        Endpoint.new do |req, res, render|
+          self.new(req, res, render).public_send(action_name)
         end
       end
 

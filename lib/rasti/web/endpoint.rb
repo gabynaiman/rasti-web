@@ -10,7 +10,7 @@ module Rasti
         request = Rack::Request.new env
         request.params.merge! env[PATH_PARAMS]
         response = Rack::Response.new
-        @block.call request, response
+        @block.call request, response, Render.new(request, response)
         response.finish
       end
 
