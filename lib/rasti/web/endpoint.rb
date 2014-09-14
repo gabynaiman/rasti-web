@@ -8,7 +8,7 @@ module Rasti
 
       def call(env)
         request = Rack::Request.new env
-        request.params.merge! env['rack.path_params']
+        request.params.merge! env[PATH_PARAMS]
         response = Rack::Response.new
         @block.call request, response
         response.finish

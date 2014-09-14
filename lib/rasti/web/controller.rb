@@ -2,17 +2,16 @@ module Rasti
   module Web
     class Controller
       
-      attr_reader :request, :response, :render, :params
+      extend Forwardable
+
+      def_delegators :request, :params, :session
+
+      attr_reader :request, :response, :render
 
       def initialize(request, response)
         @request = request
         @response = response
         @render = Render.new request, response
-        @params = Parameters.new request.params
-      end
-
-      def session
-        request.session
       end
 
       def self.action(action_name)

@@ -11,12 +11,13 @@ require_relative 'web/application'
 require_relative 'web/template'
 require_relative 'web/view_context'
 require_relative 'web/render'
-require_relative 'web/parameters'
 require_relative 'web/controller'
 require_relative 'web/version'
 
 module Rasti
   module Web
+    PATH_PARAMS = 'rack.request.path_params'
+
     extend ClassConfig
 
     attr_config :views_path, File.join(Dir.pwd, 'views')
