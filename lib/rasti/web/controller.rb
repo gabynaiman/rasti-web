@@ -5,7 +5,7 @@ module Rasti
       extend Forwardable
 
       def_delegators :request, :params, :session
-      def_delegators :response, :redirect
+      def_delegator :response, :redirect, :redirect_to
 
       attr_reader :request, :response, :render
 
