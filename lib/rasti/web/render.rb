@@ -12,7 +12,8 @@ module Rasti
 
       def view(template, locals={}, layout=nil)
         response['Content-Type'] = 'text/html'
-        response.write view_context.render(layout || Web.default_layout) { view_context.render template, locals }
+        partial = view_context.render template, locals
+        response.write view_context.render(layout || Web.default_layout) { partial }
       end
 
       def partial(template, locals={})
