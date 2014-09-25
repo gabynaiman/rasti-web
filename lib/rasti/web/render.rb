@@ -12,6 +12,12 @@ module Rasti
 
       def view(template, locals={}, layout=nil)
         response['Content-Type'] = 'text/html'
+
+        # TODO: Arreglar esto. Ver cual es el problema con Tilt
+        locals.each do |k,v|
+          view_context.define_singleton_method(k) { v }
+        end
+        
         partial = view_context.render template, locals
         response.write view_context.render(layout || Web.default_layout) { partial }
       end
