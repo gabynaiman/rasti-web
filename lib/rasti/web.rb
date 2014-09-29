@@ -11,6 +11,7 @@ require_relative 'web/application'
 require_relative 'web/template'
 require_relative 'web/view_context'
 require_relative 'web/render'
+require_relative 'web/request'
 require_relative 'web/controller'
 require_relative 'web/version'
 

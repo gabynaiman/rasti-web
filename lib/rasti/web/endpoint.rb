@@ -7,10 +7,7 @@ module Rasti
       end
 
       def call(env)
-        request = Rack::Request.new env
-        body = request.body.gets
-        request.params.merge! JSON.parse(body) if body
-        request.params.merge! env[PATH_PARAMS]
+        request = Request.new env
         response = Rack::Response.new
         @block.call request, response, Render.new(request, response)
         response.finish
