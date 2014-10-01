@@ -2,7 +2,7 @@ module Rasti
   module Web
     class Template
 
-      def self.render(template, context, locals={}, &block)
+      def self.render(template, context=nil, locals={}, &block)
         files = Web.template_engines.map { |e| File.join Web.views_path, "#{template}.#{e}" }
         template_file = files.detect { |f| File.exists? f }
 

@@ -10,21 +10,22 @@ module Rasti
         @view_context = ViewContext.new request, response
       end
 
-      def view(template, locals={}, layout=nil)
-        response['Content-Type'] = 'text/html'
-
-        # TODO: Arreglar esto. Ver cual es el problema con Tilt
-        locals.each do |k,v|
-          view_context.define_singleton_method(k) { v }
+      def status(status, text=nil, headers={})
+        response.status = status
+        response.write text if text
+        headers.each do |k,v|
+          response[k] = v
         end
-        
-        partial = view_context.render template, locals
-        response.write view_context.render(layout || Web.default_layout) { partial }
       end
 
-      def partial(template, locals={})
+      def text(text)
+        response['Content-Type'] = 'text/plain'
+        response.write text
+      end
+
+      def html(html)
         response['Content-Type'] = 'text/html'
-        response.write view_context.render(template, locals)
+        response.write html
       end
 
       def json(object)
@@ -37,22 +38,21 @@ module Rasti
         response.write script
       end
 
-      def html(html)
+      def partial(template, locals={})
         response['Content-Type'] = 'text/html'
-        response.write html
+        response.write view_context.render(template, locals)
       end
 
-      def text(text)
-        response['Content-Type'] = 'text/plain'
-        response.write text
-      end
+      def view(template, locals={}, layout=nil)
+        response['Content-Type'] = 'text/html'
 
-      def status(status, text=nil, headers={})
-        response.status = status
-        response.write text if text
-        headers.each do |k,v|
-          response[k] = v
+        # TODO: Arreglar esto. Ver cual es el problema con Tilt
+        locals.each do |k,v|
+          view_context.define_singleton_method(k) { v }
         end
+        
+        partial = view_context.render template, locals
+        response.write view_context.render(layout || Web.default_layout) { partial }
       end
 
     end

@@ -6,9 +6,9 @@ module Rasti
         super
 
         if self.POST.empty?
-          json = body.gets
+          json = body.read
           body.rewind
-          params.merge! JSON.parse(json) if json
+          params.merge! JSON.parse(json) if json && !json.strip.empty?
         end
         params.merge! env[PATH_PARAMS] if env[PATH_PARAMS]
       end
