@@ -9,6 +9,10 @@ module Rasti
         @response = response
       end
 
+      def render(template, locals={}, &block)
+        Template.render template, self, locals, &block
+      end
+
     end
   end
 end

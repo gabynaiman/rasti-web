@@ -42,12 +42,12 @@ module Rasti
 
       def partial(template, locals={})
         response['Content-Type'] = 'text/html'
-        response.write Template.render(template, view_context, locals)
+        response.write view_context.render(template, locals)
       end
 
       def view(template, locals={}, layout=nil)
-        partial = Template.render template, view_context, locals
-        layout = Template.render(layout || Web.default_layout, view_context) { partial }
+        partial = view_context.render template, locals
+        layout = view_context.render(layout || Web.default_layout) { partial }
         
         response['Content-Type'] = 'text/html'
         response.write layout
