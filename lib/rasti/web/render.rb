@@ -10,49 +10,67 @@ module Rasti
         @view_context = ViewContext.new request, response
       end
 
-      def status(status, text=nil, headers={})
-        response.status = status
-        response.write text if text
-        headers.each do |k,v|
-          response[k] = v
-        end
+      def status(status, *args)
+        respond_with status, 
+                     extract_headers(args), 
+                     extract_body(args)
       end
 
-      def text(text)
-        response['Content-Type'] = 'text/plain'
-        response.write text
+      def text(text, *args)
+        respond_with extract_status(args), 
+                     extract_headers(args).merge('Content-Type' => 'text/plain'), 
+                     text
       end
 
-      def html(html)
-        response['Content-Type'] = 'text/html'
-        response.write html
+      def html(html, *args)
+        respond_with extract_status(args), 
+                     extract_headers(args).merge('Content-Type' => 'text/html'), 
+                     html
       end
 
-      def json(object)
-        response['Content-Type'] = 'application/json'
-        response.write object.is_a?(String) ? object : JSON.dump(object)
+      def json(object, *args)
+        respond_with extract_status(args), 
+                     extract_headers(args).merge('Content-Type' => 'application/json'), 
+                     object.is_a?(String) ? object : JSON.dump(object)
       end
 
-      def js(script)
-        response['Content-Type'] = 'application/javascript'
-        response.write script
+      def js(script, *args)
+        respond_with extract_status(args), 
+                     extract_headers(args).merge('Content-Type' => 'application/javascript'), 
+                     script
       end
 
       def partial(template, locals={})
         response['Content-Type'] = 'text/html'
-        response.write view_context.render(template, locals)
+        response.write Template.render(template, view_context, locals)
       end
 
       def view(template, locals={}, layout=nil)
-        response['Content-Type'] = 'text/html'
-
-        # TODO: Arreglar esto. Ver cual es el problema con Tilt
-        locals.each do |k,v|
-          view_context.define_singleton_method(k) { v }
-        end
+        partial = Template.render template, view_context, locals
+        layout = Template.render(layout || Web.default_layout, view_context) { partial }
         
-        partial = view_context.render template, locals
-        response.write view_context.render(layout || Web.default_layout) { partial }
+        response['Content-Type'] = 'text/html'
+        response.write layout
+      end
+
+      private
+
+      def respond_with(status, headers, body)
+        response.status = status if status
+        response.headers.merge! headers
+        response.write body if body
+      end
+
+      def extract_status(args)
+        args.detect { |a| a.is_a? Fixnum }
+      end
+
+      def extract_headers(args)
+        args.detect { |a| a.is_a? Hash } || {}
+      end
+
+      def extract_body(args)
+        args.detect { |a| a.is_a? String }
       end
 
     end

@@ -3,9 +3,7 @@ require 'minitest_helper'
 describe Rasti::Web::Template do
 
   class Context
-    def max(var1, var2)
-      [var1, var2].max
-    end
+    include ContextMethodHelper
   end
   
   it 'Plain HTML' do
