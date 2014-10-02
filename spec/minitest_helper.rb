@@ -10,8 +10,8 @@ Turn.config do |c|
 end
 
 module ContextMethodHelper
-  def max(var1, var2)
-    [var1, var2].max
+  def page_header(text)
+    "<h1>#{text}</h1>"
   end
 end
 

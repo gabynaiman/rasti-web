@@ -204,79 +204,30 @@ describe Rasti::Web::Render do
 
   end
 
-  describe 'Partial' do
+  it 'Partial' do
+    render.partial 'context_and_locals', title: 'Welcome', text: 'Hello world'
 
-    it 'Plain HTML' do
-      render.partial 'plain_html'
-
-      response.status.must_equal 200
-      response['Content-Type'].must_equal 'text/html'
-      response.body.must_equal ['<h1>Hello world</h1>']
-    end
-
-    it 'Context method' do
-      render.partial 'context_method'
-
-      response.status.must_equal 200
-      response['Content-Type'].must_equal 'text/html'
-      response.body.must_equal ['2']
-
-    end
-
-    it 'Local variable' do
-      render.partial 'local_variable', text: 'Welcome'
-
-      response.status.must_equal 200
-      response['Content-Type'].must_equal 'text/html'
-      response.body.must_equal ['Welcome']
-    end
-
-    it 'Invalid template' do
-      proc { render.partial 'invalid' }.must_raise RuntimeError
-    end
-
+    response.status.must_equal 200
+    response['Content-Type'].must_equal 'text/html'
+    response.body.must_equal ['<h1>Welcome</h1><div>Hello world</div>']
   end
 
   describe 'View' do
 
-    def layout_with(content)
-      "<html><body>#{content}</body></html>"
-    end
-
-    it 'Plain HTML' do
-      render.view 'plain_html'
-
-      response.status.must_equal 200
-      response['Content-Type'].must_equal 'text/html'
-      response.body.must_equal [layout_with('<h1>Hello world</h1>')]
-    end
-
-    it 'Context method' do
-      render.view 'context_method'
-
-      response.status.must_equal 200
-      response['Content-Type'].must_equal 'text/html'
-      response.body.must_equal [layout_with('2')]
-    end
-
-    it 'Local variable' do
-      render.view 'local_variable', text: 'Welcome'
-
-      response.status.must_equal 200
-      response['Content-Type'].must_equal 'text/html'
-      response.body.must_equal [layout_with('Welcome')]
-    end
-
-    it 'Invalid template' do
-      proc { render.view 'invalid' }.must_raise RuntimeError
-    end
-
-    it 'Custom layout' do
-      render.view 'plain_html', {}, 'custom_layout'
+    it 'Default layout' do
+      render.view 'context_and_locals', title: 'Welcome', text: 'Hello world'
       
       response.status.must_equal 200
       response['Content-Type'].must_equal 'text/html'
-      response.body.must_equal ['<html><body class="custom"><h1>Hello world</h1></body></html>']
+      response.body.must_equal ['<html><body><h1>Welcome</h1><div>Hello world</div></body></html>']
+    end
+
+    it 'Custom layout' do
+      render.view 'context_and_locals', {title: 'Welcome', text: 'Hello world'}, 'custom_layout'
+      
+      response.status.must_equal 200
+      response['Content-Type'].must_equal 'text/html'
+      response.body.must_equal ['<html><body class="custom"><h1>Welcome</h1><div>Hello world</div></body></html>']
     end
 
   end
