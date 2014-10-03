@@ -28,23 +28,15 @@ module Rasti
       end
 
       def call(env)
-        route = self.class.router.route env['REQUEST_METHOD'], env['PATH_INFO']
-        if route
-          env[ROUTE_PARAMS] = route.extract_params env['PATH_INFO']
-          route.endpoint.call env
-        else
-          not_found env['REQUEST_METHOD'], env['PATH_INFO']
-        end
+        route = self.class.router.route_for env['REQUEST_METHOD'], env['PATH_INFO']
+        env[ROUTE_PARAMS] = route.extract_params env['PATH_INFO']
+        route.endpoint.call env
       end
 
       private
 
       def self.rack
         @rack ||= Rack::Builder.new
-      end
-
-      def not_found(method, path)
-        [404, {'Content-Type' => 'text/html'}, ["<h2>Not found</h2>#{method}: #{path}"]]
       end
 
     end
