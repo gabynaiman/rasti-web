@@ -12,6 +12,10 @@ module Rasti
         end
       end
 
+      def self.not_found(*args, &block)
+        router.not_found *args, &block
+      end
+
       def self.use(*args, &block)
         rack.use *args, &block
       end

@@ -2,12 +2,12 @@ module Rasti
   module Web
     class Router
 
-      VERBS = %w(DELETE GET HEAD OPTIONS PATCH POST PUT).freeze
+      VERBS = %w(delete get head options patch post put).freeze
 
       NOT_FOUND_PATTERN = '/404'
 
       VERBS.each do |verb|
-        define_method verb.downcase do |pattern, endpoint=nil, &block|
+        define_method verb do |pattern, endpoint=nil, &block|
           routes[verb] << Route.new(pattern, endpoint, &block)
         end
       end
@@ -17,7 +17,7 @@ module Rasti
       end
 
       def route_for(verb, path)
-        routes[verb].detect { |r| r.match? path } || not_found_route
+        routes[verb.downcase].detect { |r| r.match? path } || not_found_route
       end
 
       private

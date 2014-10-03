@@ -2,6 +2,7 @@ require 'coverage_helper'
 require 'rasti-web'
 require 'minitest/autorun'
 require 'turn'
+require 'rack/test'
 
 Turn.config do |c|
   c.format = :pretty
