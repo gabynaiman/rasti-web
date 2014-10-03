@@ -2,41 +2,21 @@ require 'minitest_helper'
 
 describe Rasti::Web::Endpoint do
 
-  it 'No params' do
+  it 'Call' do
     endpoint = Rasti::Web::Endpoint.new do |req, res, render|
-      render.text 'Welcome'
-    end
+      req.must_be_instance_of Rasti::Web::Request
+      res.must_be_instance_of Rack::Response
 
-    status, headers, response = endpoint.call Rack::MockRequest.env_for('/')
+      render.text 'Content'
+    end    
+
+    env = Rack::MockRequest.env_for '/'
+
+    status, headers, response = endpoint.call env
 
     status.must_equal 200
     headers['Content-Type'].must_equal 'text/plain'
-    response.body.must_equal ['Welcome']
+    response.body.must_equal ['Content']
   end
-  
-  it 'Params -> Query string' do
-    endpoint = Rasti::Web::Endpoint.new do |req, res, render|
-      render.text "Welcome #{req.params['name']}"
-    end
-
-    status, headers, response = endpoint.call Rack::MockRequest.env_for('/?name=John')
-
-    status.must_equal 200
-    headers['Content-Type'].must_equal 'text/plain'
-    response.body.must_equal ['Welcome John']
-  end
-
-  it 'Params -> Form' do
-    endpoint = Rasti::Web::Endpoint.new do |req, res, render|
-      render.text "Welcome #{req.params['name']}"
-    end
-
-    status, headers, response = endpoint.call Rack::MockRequest.env_for('/', method: 'POST', params: {'name' => 'John'})
-
-    status.must_equal 200
-    headers['Content-Type'].must_equal 'text/plain'
-    response.body.must_equal ['Welcome John']
-  end
-
 
 end

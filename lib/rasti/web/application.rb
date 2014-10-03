@@ -30,7 +30,7 @@ module Rasti
       def call(env)
         route = self.class.router.route env['REQUEST_METHOD'], env['PATH_INFO']
         if route
-          env[PATH_PARAMS] = route.extract_params env['PATH_INFO']
+          env[ROUTE_PARAMS] = route.extract_params env['PATH_INFO']
           route.endpoint.call env
         else
           not_found env['REQUEST_METHOD'], env['PATH_INFO']

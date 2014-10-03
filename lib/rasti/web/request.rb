@@ -4,13 +4,20 @@ module Rasti
 
       def initialize(env)
         super
+        params.merge! JSON.parse(body_text) if json? && body_text
+        params.merge! env[ROUTE_PARAMS] if env[ROUTE_PARAMS]
+      end
 
-        if self.POST.empty?
-          json = body.read
+      def body_text
+        @body_text ||= begin 
+          text = body.read
           body.rewind
-          params.merge! JSON.parse(json) if json && !json.strip.empty?
+          text
         end
-        params.merge! env[PATH_PARAMS] if env[PATH_PARAMS]
+      end
+
+      def json?
+        content_type == 'application/json'
       end
 
     end

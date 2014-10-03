@@ -17,7 +17,7 @@ require_relative 'web/version'
 
 module Rasti
   module Web
-    PATH_PARAMS = 'rack.request.path_params'
+    ROUTE_PARAMS = 'rack.request.route_params'
 
     extend ClassConfig
 
