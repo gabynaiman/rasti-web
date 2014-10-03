@@ -10,22 +10,14 @@ module Rasti
 
       VERBS.each do |verb|
         define_method verb do |pattern, endpoint=nil, &block|
-          routes[verb] << Route.new(normalize(pattern), endpoint || Endpoint.new(&block))
+          routes[verb] << Route.new(pattern, endpoint, &block)
         end
       end
 
       def route(verb, path)
         routes[verb.downcase.to_sym].detect do |r| 
-          r.match? normalize(path)
+          r.match? path
         end
-      end
-
-      private
-
-      def normalize(path)
-        return '/' if path.empty?
-        return path[0..-2] if path[-1, 1] == '/'
-        path
       end
 
     end
