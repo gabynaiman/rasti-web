@@ -10,7 +10,7 @@ describe Rasti::Web::Route do
     route = build_route '/resource'
 
     route.pattern.must_equal '/resource'
-    route.regexp.must_equal /^\/resource$/
+    route.regexp.to_s.must_equal /^\/resource$/.to_s
     route.endpoint.must_equal :fake_endpoint
     route.params.must_equal []
   end
@@ -19,7 +19,7 @@ describe Rasti::Web::Route do
     route = build_route '/resource/:id/:action'
 
     route.pattern.must_equal '/resource/:id/:action'
-    route.regexp.must_equal /^\/resource\/([^\/?#]+)\/([^\/?#]+)$/
+    route.regexp.to_s.must_equal /^\/resource\/([^\/?#]+)\/([^\/?#]+)$/.to_s
     route.endpoint.must_equal :fake_endpoint
     route.params.must_equal %w(id action)
   end
