@@ -212,6 +212,34 @@ describe Rasti::Web::Render do
     response.body.must_equal ['<h1>Welcome</h1><div>Hello world</div>']
   end
 
+  describe 'Layout' do
+    
+    it 'Default' do
+      render.layout { 'Page content' }
+
+      response.status.must_equal 200
+      response['Content-Type'].must_equal 'text/html'
+      response.body.must_equal ['<html><body>Page content</body></html>']
+    end
+
+    it 'Custom' do
+      render.layout('custom_layout') { 'Page content' }
+
+      response.status.must_equal 200
+      response['Content-Type'].must_equal 'text/html'
+      response.body.must_equal ['<html><body class="custom">Page content</body></html>']
+    end
+
+    it 'Empty' do
+      render.layout
+
+      response.status.must_equal 200
+      response['Content-Type'].must_equal 'text/html'
+      response.body.must_equal ['<html><body></body></html>']
+    end
+
+  end
+
   describe 'View' do
 
     it 'Default layout' do
