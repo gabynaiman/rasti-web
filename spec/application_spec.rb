@@ -24,7 +24,7 @@ class TestApp < Rasti::Web::Application
 
   use TestMiddleware
 
-  map '/api', TestMap.new
+  map '/api', TestMap
 
   get '/' do |request, response, render|
     render.html 'Page content'
@@ -41,7 +41,7 @@ describe Rasti::Web::Application do
   include Rack::Test::Methods
 
   def app
-    TestApp.new
+    TestApp
   end
 
   it 'Defined route' do
