@@ -3,6 +3,7 @@ require 'rasti-web'
 require 'minitest/autorun'
 require 'turn'
 require 'rack/test'
+require 'pry-nav'
 
 Turn.config do |c|
   c.format = :pretty

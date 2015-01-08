@@ -40,6 +40,15 @@ module Rasti
                      script
       end
 
+      def file(filename, *args)
+        content_type = MIME::Types.of(filename).first.content_type
+        body = File.read filename
+
+        respond_with extract_status(args), 
+                     extract_headers(args).merge('Content-Type' => content_type), 
+                     body
+      end
+
       def partial(template, locals={})
         response['Content-Type'] = 'text/html'
         response.write view_context.render(template, locals)

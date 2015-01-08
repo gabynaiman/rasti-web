@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'rack'
   spec.add_dependency 'tilt'
+  spec.add_dependency 'mime-types'
   spec.add_dependency 'class_config', '~> 0.0.2'
 
   spec.add_development_dependency 'bundler', '~> 1.6'
@@ -27,6 +28,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'minitest', '~> 4.7'
   spec.add_development_dependency 'turn', '~> 0.9'
   spec.add_development_dependency 'simplecov'
-  spec.add_development_dependency 'pry'
+  spec.add_development_dependency 'pry-nav'
   spec.add_development_dependency 'rack-test'
 end

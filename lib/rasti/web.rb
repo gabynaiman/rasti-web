@@ -1,6 +1,7 @@
 require 'rack'
 require 'tilt'
 require 'json'
+require 'mime-types'
 require 'class_config'
 require 'forwardable'
 

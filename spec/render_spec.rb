@@ -204,6 +204,46 @@ describe Rasti::Web::Render do
 
   end
 
+  describe 'File' do
+
+    let(:filename) { File.expand_path '../sample_file.zip', __FILE__ }
+
+    it 'Body' do
+      render.file filename
+
+      response.status.must_equal 200
+      response['Content-Type'].must_equal 'application/zip'
+      response.body.must_equal [File.read(filename)]
+    end
+
+    it 'Body and status' do
+      render.file filename, 206
+
+      response.status.must_equal 206
+      response['Content-Type'].must_equal 'application/zip'
+      response.body.must_equal [File.read(filename)]
+    end
+
+    it 'Body and headers' do
+      render.file filename, 'Content-Disposition' => 'attachment; filename=test_file.zip'
+
+      response.status.must_equal 200
+      response['Content-Type'].must_equal 'application/zip'
+      response['Content-Disposition'].must_equal 'attachment; filename=test_file.zip'
+      response.body.must_equal [File.read(filename)]
+    end
+
+    it 'Body, status and headers' do
+      render.file filename, 206, 'Content-Disposition' => 'attachment; filename=test_file.zip'
+
+      response.status.must_equal 206
+      response['Content-Type'].must_equal 'application/zip'
+      response['Content-Disposition'].must_equal 'attachment; filename=test_file.zip'
+      response.body.must_equal [File.read(filename)]
+    end
+
+  end
+
   it 'Partial' do
     render.partial 'context_and_locals', title: 'Welcome', text: 'Hello world'
 
