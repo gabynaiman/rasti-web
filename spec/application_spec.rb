@@ -48,7 +48,7 @@ describe Rasti::Web::Application do
     get '/'
     
     last_response.status.must_equal 200
-    last_response['Content-Type'].must_equal 'text/html'
+    last_response['Content-Type'].must_equal 'text/html; charset=utf-8'
     last_response.body.must_equal 'Page content'
   end
 
@@ -70,7 +70,7 @@ describe Rasti::Web::Application do
     get '/api/resource/123'
 
     last_response.status.must_equal 200
-    last_response['Content-Type'].must_equal 'application/json'
+    last_response['Content-Type'].must_equal 'application/json; charset=utf-8'
     last_response.body.must_equal '{"id":123}'
   end
   

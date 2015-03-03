@@ -29,7 +29,7 @@ describe Rasti::Web::Controller do
 
     action.must_be_instance_of Rasti::Web::Endpoint
     status.must_equal 200
-    headers['Content-Type'].must_equal 'text/html'
+    headers['Content-Type'].must_equal 'text/html; charset=utf-8'
     response.body.must_equal ['Test HTML']
   end
 

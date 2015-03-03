@@ -18,25 +18,25 @@ module Rasti
 
       def text(text, *args)
         respond_with extract_status(args), 
-                     extract_headers(args).merge('Content-Type' => 'text/plain'), 
+                     extract_headers(args).merge('Content-Type' => 'text/plain; charset=utf-8'), 
                      text
       end
 
       def html(html, *args)
         respond_with extract_status(args), 
-                     extract_headers(args).merge('Content-Type' => 'text/html'), 
+                     extract_headers(args).merge('Content-Type' => 'text/html; charset=utf-8'), 
                      html
       end
 
       def json(object, *args)
         respond_with extract_status(args), 
-                     extract_headers(args).merge('Content-Type' => 'application/json'), 
+                     extract_headers(args).merge('Content-Type' => 'application/json; charset=utf-8'), 
                      object.is_a?(String) ? object : JSON.dump(object)
       end
 
       def js(script, *args)
         respond_with extract_status(args), 
-                     extract_headers(args).merge('Content-Type' => 'application/javascript'), 
+                     extract_headers(args).merge('Content-Type' => 'application/javascript; charset=utf-8'), 
                      script
       end
 
@@ -50,7 +50,7 @@ module Rasti
       end
 
       def partial(template, locals={})
-        response['Content-Type'] = 'text/html'
+        response['Content-Type'] = 'text/html; charset=utf-8'
         response.write view_context.render(template, locals)
       end
 
@@ -58,7 +58,7 @@ module Rasti
         content = block.call if block
         layout = view_context.render(template || Web.default_layout) { content }
         
-        response['Content-Type'] = 'text/html'
+        response['Content-Type'] = 'text/html; charset=utf-8'
         response.write layout
       end
 

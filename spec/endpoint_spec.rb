@@ -15,7 +15,7 @@ describe Rasti::Web::Endpoint do
     status, headers, response = endpoint.call env
 
     status.must_equal 200
-    headers['Content-Type'].must_equal 'text/plain'
+    headers['Content-Type'].must_equal 'text/plain; charset=utf-8'
     response.body.must_equal ['Content']
   end
 
