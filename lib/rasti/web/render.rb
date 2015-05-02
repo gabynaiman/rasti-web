@@ -66,6 +66,14 @@ module Rasti
         layout(layout_template) { view_context.render template, locals }
       end
 
+      def server_sent_events(channel)
+        response.status = 200
+        response['Content-Type']  = 'text/event-stream'
+        response['Cache-Control'] = 'no-cache'
+        response['Connection']    = 'keep-alive'
+        response.body = channel.subscribe
+      end
+
       private
 
       def respond_with(status, headers, body)

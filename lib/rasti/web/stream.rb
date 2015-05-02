@@ -1,0 +1,36 @@
+module Rasti
+  module Web
+    class Stream
+
+      def initialize
+        @queue = Queue.new
+        @closed = false
+      end
+
+      def write(text)
+        raise 'Closed stream' if closed?
+        @queue << text
+      end
+
+      def each
+        while opened?
+          message = @queue.pop
+          yield message if message
+        end
+      end
+
+      def close
+        @closed = true
+      end
+
+      def closed?
+        @closed
+      end
+
+      def opened?
+        !closed?
+      end
+
+    end
+  end
+end
