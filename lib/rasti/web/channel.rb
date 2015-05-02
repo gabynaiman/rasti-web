@@ -18,7 +18,7 @@ module Rasti
       def publish(message)
         @mutex.synchronize do
           @streams.delete_if(&:closed?)
-          Rasti::Web.logger.debug(Channel) { "Publish (#{@streams.count} connections) -> #{message}" }
+          Rasti::Web.logger.debug(Channel) { "Broadcasting (#{@streams.count} connections) -> #{message}" } unless @streams.empty?
           @streams.each do |stream|
             stream.write message
           end
