@@ -40,6 +40,12 @@ module Rasti
                      script
       end
 
+      def css(stylesheet, *args)
+        respond_with extract_status(args), 
+                     extract_headers(args).merge('Content-Type' => 'text/css; charset=utf-8'), 
+                     stylesheet
+      end
+
       def file(filename, *args)
         content_type = MIME::Types.of(filename).first.content_type
         body = File.read filename
