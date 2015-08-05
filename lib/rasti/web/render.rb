@@ -72,12 +72,12 @@ module Rasti
         layout(layout_template) { view_context.render template, locals }
       end
 
-      def server_sent_events(channel)
+      def server_sent_events(channel_id)
         response.status = 200
         response['Content-Type']  = 'text/event-stream'
         response['Cache-Control'] = 'no-cache'
         response['Connection']    = 'keep-alive'
-        response.body = channel.subscribe
+        response.body = Channel[channel_id].subscribe
       end
 
       private

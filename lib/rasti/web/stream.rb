@@ -7,9 +7,9 @@ module Rasti
         @closed = false
       end
 
-      def write(text)
+      def write(message)
         raise 'Closed stream' if closed?
-        @queue << text
+        @queue << message
       end
 
       def each
