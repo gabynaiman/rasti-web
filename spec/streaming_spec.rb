@@ -7,11 +7,17 @@ describe 'Straming' do
   let(:render) { Rasti::Web::Render.new request, response }
   
   it 'Server sent events' do
-    events = []
-    stream = render.server_sent_events :test_channel
+    render.server_sent_events :test_channel
 
+    response.status.must_equal 200
+    response['Content-Type'].must_equal 'text/event-stream'
+    response['Cache-Control'].must_equal 'no-cache'
+    response['Connection'].must_equal 'keep-alive'
+    response.body.must_be_instance_of Rasti::Web::Stream
+
+    events = []
     thread = Thread.new do
-      stream.each { |e| events << e }
+      response.body.each { |e| events << e }
     end
 
     3.times do |i|
@@ -21,7 +27,7 @@ describe 'Straming' do
     end
 
     while events.count < 3; sleep 0.0001 end
-    stream.close 
+    response.body.close 
 
     events.must_equal 3.times.map { |i| "id: #{i}\nevent: tick\ndata: {\"text\":\"Tick #{i}\"}\n\n" }
   end
