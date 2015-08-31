@@ -204,6 +204,44 @@ describe Rasti::Web::Render do
 
   end
 
+  describe 'CSS' do
+    
+    it 'Body' do
+      render.css 'body{margin:0}'
+
+      response.status.must_equal 200
+      response['Content-Type'].must_equal 'text/css; charset=utf-8'
+      response.body.must_equal ['body{margin:0}']
+    end
+
+    it 'Body and status' do
+      render.css 'body{margin:0}', 206
+
+      response.status.must_equal 206
+      response['Content-Type'].must_equal 'text/css; charset=utf-8'
+      response.body.must_equal ['body{margin:0}']
+    end
+
+    it 'Body and headers' do
+      render.css 'body{margin:0}', 'Content-Encoding' => 'gzip'
+
+      response.status.must_equal 200
+      response['Content-Type'].must_equal 'text/css; charset=utf-8'
+      response['Content-Encoding'].must_equal 'gzip'
+      response.body.must_equal ['body{margin:0}']
+    end
+
+    it 'Body, status and headers' do
+      render.css 'body{margin:0}', 206, 'Content-Encoding' => 'gzip'
+
+      response.status.must_equal 206
+      response['Content-Type'].must_equal 'text/css; charset=utf-8'
+      response['Content-Encoding'].must_equal 'gzip'
+      response.body.must_equal ['body{margin:0}']
+    end
+
+  end
+
   describe 'File' do
 
     let(:filename) { File.expand_path '../sample_file.zip', __FILE__ }
