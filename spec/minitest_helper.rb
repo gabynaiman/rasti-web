@@ -20,4 +20,5 @@ end
 Rasti::Web.configure do |config|
   config.views_path = File.expand_path '../views', __FILE__
   config.helpers << ContextMethodHelper
+  config.logger.level = Logger::ERROR
 end

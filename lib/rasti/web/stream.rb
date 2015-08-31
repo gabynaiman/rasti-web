@@ -2,6 +2,8 @@ module Rasti
   module Web
     class Stream
 
+      TIMEOUT = 0.0001
+
       def initialize
         @queue = Queue.new
         @closed = false
@@ -16,6 +18,7 @@ module Rasti
         while opened?
           message = @queue.pop
           yield message if message
+          sleep TIMEOUT
         end
       end
 
