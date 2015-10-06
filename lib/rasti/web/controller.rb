@@ -15,22 +15,21 @@ module Rasti
         @render = render
       end
 
-      def execute(action_name)
-        public_send action_name
-      rescue => ex
-        if respond_to? ex.class.name
-          public_send ex.class.name, ex
-        else
-          raise ex
-        end
-      end
-
       class << self
         def action(action_name)
           raise "Undefined action '#{action_name}' in #{name}" unless instance_methods.include? action_name.to_sym
           
           Endpoint.new do |req, res, render|
-            new(req, res, render).execute(action_name)
+            controller = new req, res, render
+            begin
+              controller.public_send action_name
+            rescue => ex
+              if controller.respond_to? ex.class.name
+                controller.public_send ex.class.name, ex
+              else
+                raise ex
+              end
+            end
           end
         end
 
