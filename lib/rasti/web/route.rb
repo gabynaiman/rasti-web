@@ -2,32 +2,31 @@ module Rasti
   module Web
     class Route
 
-      attr_reader :pattern, :endpoint, :regexp, :params
-      
+      attr_reader :pattern
+
       def initialize(pattern, endpoint=nil, &block)
         @pattern = normalize pattern
         @endpoint = endpoint || Endpoint.new(&block)
-        compile
+        @regexp = compile
       end
 
       def match?(path)
-        !regexp.match(normalize(path)).nil?
+        !@regexp.match(normalize(path)).nil?
       end
 
       def extract_params(path)
-        result = regexp.match path
-        result ? Hash[params.zip(result.captures)] : {}
+        result = @regexp.match path
+        result ? result.names.each_with_object({}) { |v,h| h[v] = result[v] } : {}
       end
 
-      private 
+      def call(env)
+        @endpoint.call env
+      end
+
+      private
 
       def compile
-        @params = []
-        regexp = pattern.gsub(/(:\w+)/) do |match| 
-          @params << match[1..-1]
-          "([^/?#]+)"
-        end
-        @regexp = %r{^#{regexp}$}
+        %r{^#{pattern.gsub(')', '){0,1}').gsub(/:[a-z0-9_-]+/) { |var| "(?<#{var[1..-1]}>[^\/?#]+)" }}$}
       end
 
       def normalize(path)

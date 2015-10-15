@@ -2,66 +2,62 @@ require 'minitest_helper'
 
 describe Rasti::Web::Route do
 
-  def build_route(pattern, endpoint=:fake_endpoint)
-    Rasti::Web::Route.new pattern, :fake_endpoint 
+  ROUTES = [
+    '/', 
+    '/resource', 
+    '/resource/:id/:action',
+    '/:resource(/:id(/:action))'
+  ]
+
+  RESPONSE = [200, {}, []]
+
+  def build_route(pattern)
+    Rasti::Web::Route.new pattern, ->(env) { RESPONSE }
   end
 
-  it 'Static' do
-    route = build_route '/resource'
+  def route_for(path)
+    ROUTES.map    { |r| build_route r }
+          .detect { |r| r.match? path }
+  end
 
-    route.pattern.must_equal '/resource'
-    route.regexp.to_s.must_equal /^\/resource$/.to_s
-    route.endpoint.must_equal :fake_endpoint
-    route.params.must_equal []
+  ['', '/'].each do |path|
+    it "Root '#{path}'" do
+      route = route_for path
+
+      route.pattern.must_equal '/'
+      route.extract_params(path).must_be_empty
+      route.call({}).must_equal RESPONSE
+    end
+  end
+
+  ['/resource', '/resource/'].each do |path|
+    it "Static '#{path}'" do
+      route = route_for path
+
+      route.pattern.must_equal '/resource'
+      route.extract_params(path).must_be_empty
+      route.call({}).must_equal RESPONSE
+    end
   end
 
   it 'Params' do
-    route = build_route '/resource/:id/:action'
+    path = '/resource/123/show'
+    route = route_for path
 
     route.pattern.must_equal '/resource/:id/:action'
-    route.regexp.to_s.must_equal /^\/resource\/([^\/?#]+)\/([^\/?#]+)$/.to_s
-    route.endpoint.must_equal :fake_endpoint
-    route.params.must_equal %w(id action)
+    route.extract_params(path).must_equal 'id' => '123', 'action' => 'show'
+    route.call({}).must_equal RESPONSE
   end
 
-  it 'Match' do
-    build_route('/').must_be :match?, '/'
-    build_route('/').wont_be :match?, '/resource'
-    
-    build_route('/resource').must_be :match?, '/resource'
-    build_route('/resource').must_be :match?, '/resource/'
-    build_route('/resource').wont_be :match?, '/'
+  ['/other', '/other/456', '/other/456/edit'].each do |path|
+    it "Optional params '#{path}'" do
+      route = route_for path
+      sections = path[1..-1].split('/')
 
-    build_route('/resource/:id/:action').must_be :match?, '/resource/123/show'
-    build_route('/resource/:id/:action').wont_be :match?, '/123/show'
-  end
-
-  it 'Extract params' do
-    build_route('/resource').extract_params('/resource').must_equal Hash.new
-    build_route('/resource/:id/:action').extract_params('/resource/123/show').must_equal 'id' => '123', 'action' => 'show'
-  end
-
-  it 'Normalize path' do
-    build_route('').pattern.must_equal '/'
-    build_route('/').pattern.must_equal '/'
-    build_route('/resource').pattern.must_equal '/resource'
-    build_route('/resource/').pattern.must_equal '/resource'
-  end
-
-  it 'Block endpoint' do
-    route = Rasti::Web::Route.new('/') do |req, res|
-      res.status = 404
-      res['Content-Type'] = 'text/html'
-      res.write '<h1>Not found</h1>'
+      route.pattern.must_equal '/:resource(/:id(/:action))'
+      route.extract_params(path).must_equal 'resource' => sections[0], 'id' => sections[1], 'action' => sections[2]
+      route.call({}).must_equal RESPONSE
     end
-
-    route.endpoint.must_be_instance_of Rasti::Web::Endpoint
-
-    status, headers, response = route.endpoint.call(:fake_env)
-
-    status.must_equal 404
-    headers['Content-Type'].must_equal 'text/html'
-    response.body.must_equal ['<h1>Not found</h1>']
   end
 
 end

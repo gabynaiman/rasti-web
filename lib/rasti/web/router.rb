@@ -19,7 +19,7 @@ module Rasti
       def call(env)
         route = route_for env 
         env[ROUTE_PARAMS] = route.extract_params env['PATH_INFO']
-        route.endpoint.call env
+        route.call env
       end
 
       private
