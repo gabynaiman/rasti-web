@@ -44,6 +44,10 @@ describe Rasti::Web::Application do
     TestApp
   end
 
+  it 'List all routes' do
+    app.all_routes.must_equal 'GET' => ['/']
+  end
+
   it 'Defined route' do
     get '/'
     

@@ -27,6 +27,10 @@ module Rasti
           app.call env
         end
 
+        def all_routes
+          router.all_routes
+        end
+
         private
 
         def router

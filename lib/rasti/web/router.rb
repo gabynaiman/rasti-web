@@ -8,7 +8,7 @@ module Rasti
 
       VERBS.each do |verb|
         define_method verb do |pattern, endpoint=nil, &block|
-          routes[verb] << Route.new(pattern, endpoint, &block)
+          routes[verb.upcase] << Route.new(pattern, endpoint, &block)
         end
       end
 
@@ -22,6 +22,10 @@ module Rasti
         route.call env
       end
 
+      def all_routes
+        Hash[routes.map { |m,r| [m, r.map(&:pattern)] }]
+      end
+
       private
 
       def routes
@@ -29,7 +33,7 @@ module Rasti
       end
 
       def route_for(env)
-        routes[env['REQUEST_METHOD'].downcase].detect { |r| r.match? env['PATH_INFO'] } || not_found_route
+        routes[env['REQUEST_METHOD'].upcase].detect { |r| r.match? env['PATH_INFO'] } || not_found_route
       end
 
       def not_found_route
