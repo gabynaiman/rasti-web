@@ -2,10 +2,13 @@ module Rasti
   module Web
     class Request < Rack::Request
 
-      def initialize(env)
-        super
-        params.merge! JSON.parse(body_text) if json? && body_text
-        params.merge! env[ROUTE_PARAMS] if env[ROUTE_PARAMS]
+      def params
+        @params ||= Hash::Indifferent.new.tap do |hash|
+          hash.update self.GET
+          hash.update self.POST
+          hash.update env[ROUTE_PARAMS] if env.key? ROUTE_PARAMS
+          hash.update JSON.parse(body_text) if json? && body_text
+        end
       end
 
       def body_text

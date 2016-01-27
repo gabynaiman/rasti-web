@@ -5,6 +5,7 @@ require 'mime-types'
 require 'class_config'
 require 'forwardable'
 require 'logger'
+require 'hash_ext'
 
 require_relative 'web/route'
 require_relative 'web/router'
