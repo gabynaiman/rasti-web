@@ -1,15 +1,9 @@
 require 'coverage_helper'
 require 'rasti-web'
 require 'minitest/autorun'
-require 'turn'
+require 'minitest/colorin'
 require 'rack/test'
 require 'pry-nav'
-
-Turn.config do |c|
-  c.format = :pretty
-  c.natural = true
-  c.ansi = true
-end
 
 module ContextMethodHelper
   def page_header(text)
