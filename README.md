@@ -24,7 +24,43 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Routing
+
+```ruby
+# app.rb
+class WebApp < Rasti::Web::Application
+
+  use SomeMiddleware
+
+  get '/hello' do |request, response, render|
+    render.text 'world'
+  end
+
+  put '/users/:id', UsersController >> :update
+
+end
+
+# configu.ru
+require_relative 'app'
+run WebApp
+```
+
+### Controllers
+
+```ruby
+class UsersController < Rasti::Web::Controller
+
+  def update
+    user = User.find(params[:id])
+    if user.update_attributes(params[:user])
+      render.view 'users/list', users: User.all
+    else
+      render.view 'users/edit', user: user
+    end
+  end
+
+end
+```
 
 ## Contributing
 
