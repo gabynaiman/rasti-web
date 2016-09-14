@@ -1,10 +1,10 @@
 # Rasti::Web
 
-[![Gem Version](https://badge.fury.io/rb/rasti-web.png)](https://rubygems.org/gems/rasti-web)
-[![Build Status](https://travis-ci.org/gabynaiman/rasti-web.png?branch=master)](https://travis-ci.org/gabynaiman/rasti-web)
-[![Coverage Status](https://coveralls.io/repos/gabynaiman/rasti-web/badge.png?branch=master)](https://coveralls.io/r/gabynaiman/rasti-web?branch=master)
-[![Code Climate](https://codeclimate.com/github/gabynaiman/rasti-web.png)](https://codeclimate.com/github/gabynaiman/rasti-web)
-[![Dependency Status](https://gemnasium.com/gabynaiman/rasti-web.png)](https://gemnasium.com/gabynaiman/rasti-web)
+[![Gem Version](https://badge.fury.io/rb/rasti-web.svg)](https://rubygems.org/gems/rasti-web)
+[![Build Status](https://travis-ci.org/gabynaiman/rasti-web.svg?branch=master)](https://travis-ci.org/gabynaiman/rasti-web)
+[![Coverage Status](https://coveralls.io/repos/gabynaiman/rasti-web/badge.svg?branch=master)](https://coveralls.io/r/gabynaiman/rasti-web?branch=master)
+[![Code Climate](https://codeclimate.com/github/gabynaiman/rasti-web.svg)](https://codeclimate.com/github/gabynaiman/rasti-web)
+[![Dependency Status](https://gemnasium.com/gabynaiman/rasti-web.svg)](https://gemnasium.com/gabynaiman/rasti-web)
 
 Web blocks to build robust applications
 
