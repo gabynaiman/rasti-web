@@ -7,6 +7,7 @@ require 'class_config'
 require 'forwardable'
 require 'logger'
 require 'hash_ext'
+require 'restruct'
 
 require_relative 'web/route'
 require_relative 'web/router'
@@ -33,6 +34,7 @@ module Rasti
     attr_config :default_layout, 'layout'
     attr_config :helpers, []
     attr_config :logger, Logger.new(STDOUT)
+    attr_config :channels_prefix, Restruct::Id['rasti-web']['channels']
 
     after_config do |config|
       config.helpers.each { |h| ViewContext.send :include, h }

@@ -20,13 +20,21 @@ describe 'Straming' do
       response.body.each { |e| events << e }
     end
 
+    channel = Rasti::Web::Channel[:test_channel]
+    sleep 0.001 # Wait for establish connection
+
     3.times do |i|
       data = {text: "Tick #{i}"}
       event = Rasti::Web::ServerSentEvent.new data, id: i, event: 'tick'
-      Rasti::Web::Channel[:test_channel].publish event
+      channel.publish event
     end
 
-    while events.count < 3; sleep 0.0001 end
+    Timeout.timeout(3) do
+      while events.count < 3; 
+        sleep 0.0001 # Wait for subscriptions
+      end
+    end
+    
     response.body.close 
 
     events.must_equal 3.times.map { |i| "id: #{i}\nevent: tick\ndata: {\"text\":\"Tick #{i}\"}\n\n" }
