@@ -22,7 +22,7 @@ describe 'Straming' do
 
     channel_1 = Rasti::Web::Channel[:channel_1]
     channel_2 = Rasti::Web::Channel[:channel_2]
-    sleep 0.05 # Wait for establish connection
+    sleep 0.1 # Wait for establish connection
 
     3.times do |i|
       data = {text: "Tick #{i}"}
