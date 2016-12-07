@@ -24,7 +24,7 @@ module Rasti
       end
 
       def self.[](id)
-        @channels ||= Hash.new { |h,k| h[k] = self.new id }
+        @channels ||= Hash.new { |h,k| h[k] = self.new k }
         @channels[id]
       end
 

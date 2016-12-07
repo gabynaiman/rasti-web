@@ -7,7 +7,7 @@ describe 'Straming' do
   let(:render) { Rasti::Web::Render.new request, response }
   
   it 'Server sent events' do
-    render.server_sent_events :test_channel
+    render.server_sent_events :channel_1
 
     response.status.must_equal 200
     response['Content-Type'].must_equal 'text/event-stream'
@@ -20,13 +20,15 @@ describe 'Straming' do
       response.body.each { |e| events << e }
     end
 
-    channel = Rasti::Web::Channel[:test_channel]
+    channel_1 = Rasti::Web::Channel[:channel_1]
+    channel_2 = Rasti::Web::Channel[:channel_2]
     sleep 0.05 # Wait for establish connection
 
     3.times do |i|
       data = {text: "Tick #{i}"}
       event = Rasti::Web::ServerSentEvent.new data, id: i, event: 'tick'
-      channel.publish event
+      channel_1.publish event
+      channel_2.publish event
     end
 
     Timeout.timeout(3) do
