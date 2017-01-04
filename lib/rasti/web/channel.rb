@@ -33,7 +33,7 @@ module Rasti
       end
 
       def self.broadcaster
-        @broadcaster ||= Broadcaster.new id: Web.channels_prefix
+        @broadcaster ||= Broadcaster.new id: Web.channels_prefix, logger: Web.logger
       end
 
       def self.[](id)
