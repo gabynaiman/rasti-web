@@ -5,6 +5,14 @@ describe 'Straming' do
   let(:request) { Rack::Request.new Hash.new }
   let(:response) { Rack::Response.new }
   let(:render) { Rasti::Web::Render.new request, response }
+
+  def wait_for(&block)
+    Timeout.timeout(3) do
+      while !block.call
+        sleep 0.0001
+      end
+    end
+  end
   
   it 'Server sent events' do
     render.server_sent_events :channel_1
@@ -16,13 +24,13 @@ describe 'Straming' do
     response.body.must_be_instance_of Rasti::Web::Stream
 
     events = []
-    thread = Thread.new do
+    
+    Thread.new do
       response.body.each { |e| events << e }
     end
 
     channel_1 = Rasti::Web::Channel[:channel_1]
     channel_2 = Rasti::Web::Channel[:channel_2]
-    sleep 0.1 # Wait for establish connection
 
     3.times do |i|
       data = {text: "Tick #{i}"}
@@ -31,11 +39,7 @@ describe 'Straming' do
       channel_2.publish event
     end
 
-    Timeout.timeout(3) do
-      while events.count < 3; 
-        sleep 0.0001 # Wait for subscriptions
-      end
-    end
+    wait_for { events.count == 3 }
     
     response.body.close 
 

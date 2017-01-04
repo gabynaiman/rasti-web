@@ -1,26 +1,39 @@
 module Rasti
   module Web
+
     class Channel
 
-      attr_reader :streams
+      attr_reader :id
 
       def initialize(id)
+        @id = id
+        @subscriptions = {}
         @mutex = Mutex.new
-        @channel = Restruct::Channel.new id: Restruct::Id[Web.channels_prefix][id]
-        @streams = []
-        listen
       end
 
       def subscribe
-        Stream.new.tap do |stream|
-          mutex.synchronize do
-            streams << stream
+        stream = Stream.new
+        
+        subscription_id = broadcaster.subscribe id do |message|
+          if stream.open?
+            stream.write message
+          else
+            sid = mutex.synchronize { subscriptions.delete stream }
+            broadcaster.unsubscribe sid
           end
         end
+
+        mutex.synchronize { subscriptions[stream] = subscription_id }
+
+        stream
       end
 
       def publish(message)
-        channel.publish message
+        broadcaster.publish id, message
+      end
+
+      def self.broadcaster
+        @broadcaster ||= Broadcaster.new id: Web.channels_prefix
       end
 
       def self.[](id)
@@ -30,26 +43,12 @@ module Rasti
 
       private
 
-      attr_reader :mutex, :channel
+      attr_reader :subscriptions, :mutex
 
-      def listen
-        Thread.new do
-          channel.subscribe do |message|
-            broadcast message
-          end
-        end
+      def broadcaster
+        self.class.broadcaster
       end
 
-      def broadcast(message)
-        mutex.synchronize do
-          streams.delete_if(&:closed?)
-          Rasti::Web.logger.debug(Channel) { "Broadcasting (#{streams.count} connections) -> #{message}" } unless streams.empty?
-          streams.each do |stream|
-            stream.write message
-          end
-        end
-      end
-      
     end
   end
 end

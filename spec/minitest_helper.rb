@@ -16,3 +16,7 @@ Rasti::Web.configure do |config|
   config.helpers << ContextMethodHelper
   config.logger.level = Logger::ERROR
 end
+
+Broadcaster.configure do |config|
+  config.logger = Rasti::Web.logger
+end

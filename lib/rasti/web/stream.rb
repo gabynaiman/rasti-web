@@ -15,7 +15,7 @@ module Rasti
       end
 
       def each
-        while opened?
+        while open?
           message = @queue.pop
           yield message if message
           sleep TIMEOUT
@@ -30,7 +30,7 @@ module Rasti
         @closed
       end
 
-      def opened?
+      def open?
         !closed?
       end
 
