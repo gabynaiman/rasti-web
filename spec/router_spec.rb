@@ -32,6 +32,7 @@ describe Rasti::Web::Router do
     status, headers, response = router.call get('/not_found')
 
     status.must_equal 404
+    headers.must_equal 'Content-Length' => '25'
     response.body.must_equal ['Not found: GET /not_found']
   end
 
