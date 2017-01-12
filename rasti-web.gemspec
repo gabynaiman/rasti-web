@@ -34,7 +34,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'simplecov', '~> 0.12'
   spec.add_development_dependency 'coveralls', '~> 0.8'
   spec.add_development_dependency 'pry-nav', '~> 0.2'
-  spec.add_development_dependency 'rack-test'
+  spec.add_development_dependency 'rack-test', '~> 0.6'
 
   if RUBY_VERSION < '2'
     spec.add_development_dependency 'term-ansicolor', '~> 1.3.0'
