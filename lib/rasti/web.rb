@@ -7,7 +7,6 @@ require 'class_config'
 require 'forwardable'
 require 'logger'
 require 'hash_ext'
-require 'broadcaster'
 
 require_relative 'web/route'
 require_relative 'web/router'
@@ -18,13 +17,11 @@ require_relative 'web/view_context'
 require_relative 'web/render'
 require_relative 'web/request'
 require_relative 'web/controller'
-require_relative 'web/channel'
-require_relative 'web/stream'
-require_relative 'web/server_sent_event'
 require_relative 'web/version'
 
 module Rasti
   module Web
+
     ROUTE_PARAMS = 'rack.request.route_params'
 
     extend ClassConfig
@@ -34,10 +31,10 @@ module Rasti
     attr_config :default_layout, 'layout'
     attr_config :helpers, []
     attr_config :logger, Logger.new(STDOUT)
-    attr_config :channels_prefix, 'rasti-web:channels'
 
     after_config do |config|
       config.helpers.each { |h| ViewContext.send :include, h }
     end
+
   end
 end
