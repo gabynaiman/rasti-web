@@ -15,8 +15,8 @@ module Rasti
       end
 
       def extract_params(path)
-        result = @regexp.match path
-        result ? result.names.each_with_object({}) { |v,h| h[v] = result[v] } : {}
+        result = @regexp.match normalize(path)
+        result ? result.names.each_with_object(Hash::Indifferent.new) { |v,h| h[v] = result[v] } : {}
       end
 
       def call(env)
@@ -26,7 +26,10 @@ module Rasti
       private
 
       def compile
-        %r{^#{pattern.gsub(')', '){0,1}').gsub(/:[a-z0-9_-]+/) { |var| "(?<#{var[1..-1]}>[^\/?#]+)" }}$}
+        compiled = pattern.gsub(')', '){0,1}')
+                          .gsub('/*', '(\/(?<wildcard>.*))?')
+                          .gsub(/:[a-z0-9_-]+/) { |var| "(?<#{var[1..-1]}>[^\/?#]+)" }
+        %r{^#{compiled}$}
       end
 
       def normalize(path)
