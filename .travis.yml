@@ -9,5 +9,3 @@ rvm:
   - jruby
 before_install:
   - gem install bundler
-services:
-  - redis-server
