@@ -11,13 +11,22 @@ class TestController < Rasti::Web::Controller
     raise 'Unexpected error'
   end
 
-  def fail
-    raise CustomError, 'Expected error'
+  def explicit_fail
+    raise CustomError, 'Explicit error'
+  end
+
+  def implicit_fail
+    raise EOFError, 'Implicit error'
   end
 
   rescue_from CustomError do |ex|
     render.status 500, ex.message
   end
+
+  rescue_from IOError do |ex|
+    render.status 500, ex.message
+  end
+
 end
 
 describe Rasti::Web::Controller do
@@ -38,13 +47,22 @@ describe Rasti::Web::Controller do
     error.message.must_equal "Undefined action 'invalid' in TestController"
   end
 
-  it 'Rescue exception' do
-    action = TestController.action :fail
-    env = Rack::MockRequest.env_for '/fail'
+  it 'Rescue explicit exception' do
+    action = TestController.action :explicit_fail
+    env = Rack::MockRequest.env_for '/explicit_fail'
     status, headers, response = action.call env
 
     status.must_equal 500
-    response.body.must_equal ['Expected error']
+    response.body.must_equal ['Explicit error']
+  end
+
+  it 'Rescue implicit exception' do
+    action = TestController.action :implicit_fail
+    env = Rack::MockRequest.env_for '/implicit_fail'
+    status, headers, response = action.call env
+
+    status.must_equal 500
+    response.body.must_equal ['Implicit error']
   end
 
   it 'Unexpected exception' do

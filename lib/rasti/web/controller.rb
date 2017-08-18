@@ -24,8 +24,9 @@ module Rasti
             begin
               controller.public_send action_name
             rescue => ex
-              if controller.respond_to? ex.class.name
-                controller.public_send ex.class.name, ex
+              exception_class = handled_exceptions.detect { |klass| ex.is_a? klass }
+              if exception_class
+                controller.instance_exec ex, &exception_handlers[exception_class]
               else
                 raise ex
               end
@@ -35,10 +36,16 @@ module Rasti
 
         alias_method :>>, :action
 
+        def exception_handlers
+          @exception_handlers ||= superclass.respond_to?(:exception_handlers) ? superclass.exception_handlers : {}
+        end
+
+        def handled_exceptions
+          @handled_exceptions ||= ClassAncestrySort.desc exception_handlers.keys
+        end
+
         def rescue_from(exception_class, &block)
-          define_method exception_class.name do |ex|
-            instance_exec ex, &block
-          end
+          exception_handlers[exception_class] = block
         end
       end
 
