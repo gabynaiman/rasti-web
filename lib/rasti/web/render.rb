@@ -81,7 +81,7 @@ module Rasti
       end
 
       def extract_status(args)
-        args.detect { |a| a.is_a? Fixnum }
+        args.detect { |a| a.is_a? Integer }
       end
 
       def extract_headers(args)
