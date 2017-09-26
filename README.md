@@ -50,22 +50,6 @@ run WebApp
 ```ruby
 class UsersController < Rasti::Web::Controller
 
-  before_action do |action_name|
-    ...
-  end
-
-  before_action :action_name do
-    ...
-  end
-
-  after_action do |action_name|
-    ...
-  end
-
-  after_action :action_name do
-    ...
-  end
-
   def update
     user = User.find(params[:id])
     if user.update_attributes(params[:user])
@@ -73,10 +57,6 @@ class UsersController < Rasti::Web::Controller
     else
       render.view 'users/edit', user: user
     end
-  end
-
-  rescue_from StandardError do |ex|
-    ...
   end
 
 end
