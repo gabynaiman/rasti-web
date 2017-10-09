@@ -68,15 +68,15 @@ module Rasti
         end
 
         def before_action_hooks
-          @before_action_hooks ||= superclass.respond_to?(:before_action_hooks) ? superclass.before_action_hooks : {}
+          @before_action_hooks ||= superclass.respond_to?(:before_action_hooks) ? superclass.before_action_hooks.dup : {}
         end
 
         def after_action_hooks
-          @after_action_hooks ||= superclass.respond_to?(:after_action_hooks) ? superclass.after_action_hooks : {}
+          @after_action_hooks ||= superclass.respond_to?(:after_action_hooks) ? superclass.after_action_hooks.dup : {}
         end
 
         def exception_handlers
-          @exception_handlers ||= superclass.respond_to?(:exception_handlers) ? superclass.exception_handlers : {}
+          @exception_handlers ||= superclass.respond_to?(:exception_handlers) ? superclass.exception_handlers.dup : {}
         end
 
         def handled_exceptions
