@@ -4,11 +4,12 @@ rvm:
   - 2.0
   - 2.1
   - 2.2
-  - 2.3.0
-  - 2.4.0
-  - 2.5.0
-  - 2.6.0
-  - jruby-9.1.17.0
+  - 2.3
+  - 2.4
+  - 2.5
+  - 2.6
+  - 2.7
+  - jruby-9.2.9.0
   - ruby-head
   - jruby-head
 
@@ -17,7 +18,3 @@ matrix:
   allow_failures:
     - rvm: ruby-head
     - rvm: jruby-head
-
-before_install:
-  - rvm all-gemsets do gem uninstall bundler -ax || true
-  - gem install bundler -v "< 2"
