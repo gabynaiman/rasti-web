@@ -30,24 +30,38 @@ describe Rasti::Web::Request do
     request.params['lon'].must_equal '20'
   end
 
-  it 'Json body params' do
-    env = Rack::MockRequest.env_for '/', input: '{"lat": 10, "lon": 20}', 'CONTENT_TYPE' => 'application/json'
+  describe 'Json body params' do
 
-    request = Rasti::Web::Request.new env
+    it 'Valid content type' do
+      env = Rack::MockRequest.env_for '/', input: '{"lat": 10, "lon": 20}', 'CONTENT_TYPE' => 'application/json'
 
-    request.must_be :json?
-    request.params[:lat].must_equal 10
-    request.params['lon'].must_equal 20
-  end
+      request = Rasti::Web::Request.new env
 
-  it 'No json body params' do
-    env = Rack::MockRequest.env_for '/', input: '{"lat": 10, "lon": 20}', 'CONTENT_TYPE' => 'other/type'
+      request.json?.must_equal true
+      request.params[:lat].must_equal 10
+      request.params['lon'].must_equal 20
+    end
 
-    request = Rasti::Web::Request.new env
+    it 'Invalid content type' do
+      env = Rack::MockRequest.env_for '/', input: '{"lat": 10, "lon": 20}', 'CONTENT_TYPE' => 'other/type'
 
-    request.wont_be :json?
-    request.params[:lat].must_be_nil
-    request.params['lon'].must_be_nil
+      request = Rasti::Web::Request.new env
+
+      request.json?.must_equal false
+      request.params[:lat].must_be_nil
+      request.params['lon'].must_be_nil
+    end
+
+    it 'Undefined content type' do
+      env = Rack::MockRequest.env_for '/', input: '{"lat": 10, "lon": 20}'
+
+      request = Rasti::Web::Request.new env
+
+      request.json?.must_equal false
+      request.params[:lat].must_be_nil
+      request.params['lon'].must_be_nil
+    end
+
   end
 
 end

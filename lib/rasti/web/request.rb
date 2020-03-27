@@ -20,7 +20,7 @@ module Rasti
       end
 
       def json?
-        content_type && ContentType.parse(content_type).mime_type == 'application/json' 
+        !content_type.nil? && ContentType.parse(content_type).mime_type == 'application/json' 
       rescue 
         false
       end
