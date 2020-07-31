@@ -338,4 +338,209 @@ describe Rasti::Web::Render do
 
   end
 
+  describe 'Char stream' do
+
+    let(:string) { 'Imagine this is a multi-megabyte text.' }
+
+    it 'Empty' do
+      render.char_stream ''
+
+      response.status.must_equal 200
+      response['X-Accel-Buffering'] = 'no'
+      response['Cache-Control'] = 'no-cache'
+      response.body.must_be_instance_of Enumerator
+      chunks = response.body.to_a
+      chunks.must_equal []
+    end
+
+    it 'Body' do
+      render.char_stream string
+
+      response.status.must_equal 200
+      response['X-Accel-Buffering'] = 'no'
+      response['Cache-Control'] = 'no-cache'
+      response.body.must_be_instance_of Enumerator
+      chunks = response.body.to_a
+      chunks.must_equal [
+        string
+      ]
+    end
+
+    it 'Body and headers' do
+      render.char_stream string, 'Content-Type' => 'text/html; charset=utf-8'
+
+      response.status.must_equal 200
+      response['X-Accel-Buffering'] = 'no'
+      response['Cache-Control'] = 'no-cache'
+      response['Content-Type'].must_equal 'text/html; charset=utf-8'
+      response.body.must_be_instance_of Enumerator
+      chunks = response.body.to_a
+      chunks.must_equal [
+        string
+      ]
+    end
+
+    it 'Body, headers and chunk size' do
+      render.char_stream string, {'Content-Type' => 'text/html; charset=utf-8'}, 10
+
+      response.status.must_equal 200
+      response['X-Accel-Buffering'] = 'no'
+      response['Cache-Control'] = 'no-cache'
+      response['Content-Type'].must_equal 'text/html; charset=utf-8'
+      response.body.must_be_instance_of Enumerator
+      chunks = response.body.to_a
+      chunks.must_equal [
+        'Imagine th',
+        'is is a mu',
+        'lti-megaby',
+        'te text.'
+      ]
+    end
+
+  end
+
+  describe 'Json object stream' do
+
+    let(:object) { {id: 123, color: 'red', size: 'XXL'} }
+
+    it 'Empty' do
+      render.json_object_stream({})
+
+      response.status.must_equal 200
+      response['X-Accel-Buffering'] = 'no'
+      response['Cache-Control'] = 'no-cache'
+      response['Content-Type'].must_equal 'application/json; charset=utf-8'
+      response.body.must_be_instance_of Enumerator
+      chunks = response.body.to_a
+      chunks.must_equal [
+        {}.to_json
+      ]
+    end
+
+    it 'Body' do
+      render.json_object_stream object
+
+      response.status.must_equal 200
+      response['X-Accel-Buffering'] = 'no'
+      response['Cache-Control'] = 'no-cache'
+      response['Content-Type'].must_equal 'application/json; charset=utf-8'
+      response.body.must_be_instance_of Enumerator
+      chunks = response.body.to_a
+      chunks.must_equal [
+        object.to_json
+      ]
+    end
+
+    it 'Body and headers' do
+      render.json_object_stream object, 'Connection' => 'keep-alive'
+
+      response.status.must_equal 200
+      response['X-Accel-Buffering'] = 'no'
+      response['Cache-Control'] = 'no-cache'
+      response['Content-Type'].must_equal 'application/json; charset=utf-8'
+      response['Connection'].must_equal 'keep-alive'
+      response.body.must_be_instance_of Enumerator
+      chunks = response.body.to_a
+      chunks.must_equal [
+        object.to_json
+      ]
+    end
+
+    it 'Body, headers and chunk size' do
+      render.json_object_stream object, {'Connection' => 'keep-alive'}, 10
+
+      response.status.must_equal 200
+      response['X-Accel-Buffering'] = 'no'
+      response['Cache-Control'] = 'no-cache'
+      response['Content-Type'].must_equal 'application/json; charset=utf-8'
+      response['Connection'].must_equal 'keep-alive'
+      response.body.must_be_instance_of Enumerator
+      chunks = response.body.to_a
+      chunks.must_equal [
+        '{"id":123,',
+        '"color":"r',
+        'ed","size"',
+        ':"XXL"}'
+      ]
+    end
+
+  end
+
+  describe 'Json array stream' do
+
+    let(:array) { [{id: 123, color: 'red', size: 'XXL'}, {id: 456, color: 'green', size: 'XXXL'}] }
+
+    it 'Empty' do
+      render.json_array_stream []
+
+      response.status.must_equal 200
+      response['X-Accel-Buffering'] = 'no'
+      response['Cache-Control'] = 'no-cache'
+      response['Content-Type'].must_equal 'application/json; charset=utf-8'
+      response.body.must_be_instance_of Enumerator
+      chunks = response.body.to_a
+      chunks.must_equal [
+        [].to_json
+      ]
+    end
+
+    it 'Body' do
+      render.json_array_stream array
+
+      response.status.must_equal 200
+      response['X-Accel-Buffering'] = 'no'
+      response['Cache-Control'] = 'no-cache'
+      response['Content-Type'].must_equal 'application/json; charset=utf-8'
+      response.body.must_be_instance_of Enumerator
+      chunks = response.body.to_a
+      chunks.must_equal [
+        "[#{array[0].to_json}",
+        ",#{array[1].to_json}",
+        "]"
+      ]
+    end
+
+    it 'Body and headers' do
+      render.json_array_stream array, 'Connection' => 'keep-alive'
+
+      response.status.must_equal 200
+      response['X-Accel-Buffering'] = 'no'
+      response['Cache-Control'] = 'no-cache'
+      response['Content-Type'].must_equal 'application/json; charset=utf-8'
+      response['Connection'].must_equal 'keep-alive'
+      response.body.must_be_instance_of Enumerator
+      chunks = response.body.to_a
+      chunks.must_equal [
+        "[#{array[0].to_json}",
+        ",#{array[1].to_json}",
+        "]"
+      ]
+    end
+
+    it 'Body, headers and chunk size' do
+      render.json_array_stream array, {'Connection' => 'keep-alive'}, 10
+
+      response.status.must_equal 200
+      response['X-Accel-Buffering'] = 'no'
+      response['Cache-Control'] = 'no-cache'
+      response['Content-Type'].must_equal 'application/json; charset=utf-8'
+      response['Connection'].must_equal 'keep-alive'
+      response.body.must_be_instance_of Enumerator
+      chunks = response.body.to_a
+      chunks.must_equal [
+        '[{"id":123',
+        ',"color":"',
+        'red","size',
+        '":"XXL"}',
+        ',{"id":456',
+        ',"color":"',
+        'green","si',
+        'ze":"XXXL"',
+        '}',
+        ']'
+      ]
+    end
+
+  end
+
 end

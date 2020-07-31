@@ -72,6 +72,24 @@ module Rasti
         layout(layout_template) { view_context.render template, locals }
       end
 
+      def char_stream(chars, headers={}, chunk_size=5000)
+        stream(headers, chunk_size) do |streamer|
+          streamer.stream_chars(chars)
+        end
+      end
+
+      def json_object_stream(json_object, headers={}, chunk_size=5000)
+        json_stream(headers, chunk_size) do |streamer|
+          streamer.stream_json_object(json_object)
+        end
+      end
+
+      def json_array_stream(json_objects, headers={}, chunk_size=5000)
+        json_stream(headers, chunk_size) do |streamer|
+          streamer.stream_json_array(json_objects)
+        end
+      end
+
       private
 
       def respond_with(status, headers, body)
@@ -92,6 +110,69 @@ module Rasti
         args.detect { |a| a.is_a? String }
       end
 
+      def stream(headers={}, chunk_size=5000)
+        headers.merge(headers_for_streaming).each do |k, v|
+          response[k] = v
+        end
+
+        response.body = Enumerator.new do |yielder|
+          yield Streamer.new(yielder, chunk_size)
+        end
+      end
+
+      def json_stream(headers={}, chunk_size=5000, &block)
+        stream(headers.merge(headers_for_json), chunk_size, &block)
+      end
+
+      def headers_for_json
+        {
+          'Content-Type' => 'application/json; charset=utf-8'
+        }
+      end
+
+      def headers_for_streaming
+        {
+          'X-Accel-Buffering' => 'no', # Stop NGINX from buffering
+          'Cache-Control' => 'no-cache' # Stop downstream caching
+        }
+      end
+
+      class Streamer
+        def initialize(stream, chunk_size)
+          @stream = stream
+          @chunk_size = chunk_size
+        end
+
+        def stream_chars(chars_or_string)
+          chars = chars_or_string.is_a?(String) ? chars_or_string.each_char : chars_or_string
+          chars.each_slice(chunk_size).each do |cs|
+            stream << cs.join
+          end
+        end
+
+        def stream_json_object(json_object)
+          json_string = json_object.is_a?(String) ? json_object : JSON.dump(json_object)
+          stream_chars(json_string)
+        end
+
+        def stream_json_array(json_objects)
+          is_first = true
+
+          json_objects.each do |json_object|
+            json_string = json_object.is_a?(String) ? json_object : JSON.dump(json_object)
+            prefix = is_first ? '[' : ','
+            stream_chars("#{prefix}#{json_string}")
+            is_first = false
+          end
+
+          missing_chars = is_first ? '[]' : ']'
+          stream_chars(missing_chars)
+        end
+
+        private
+
+        attr_reader :stream, :chunk_size
+      end
     end
   end
 end
