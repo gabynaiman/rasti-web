@@ -3,12 +3,12 @@ require 'minitest_helper'
 describe Rasti::Web::Route do
 
   ROUTES = [
-    '/', 
+    '/',
     '/*/wildcard/action',
     '/wildcard/*/action',
     '/wildcard/*/action/:id',
     '/wildcard/*',
-    '/resource', 
+    '/resource',
     '/resource/:id/:action',
     '/:resource(/:id(/:action))'
   ]
@@ -72,7 +72,7 @@ describe Rasti::Web::Route do
 
       route.pattern.must_equal '/*/wildcard/action'
       route.extract_params(path).must_equal wildcard: 'section/sub_section'
-      route.call({}).must_equal RESPONSE      
+      route.call({}).must_equal RESPONSE
     end
 
     it 'Middle' do
@@ -97,7 +97,7 @@ describe Rasti::Web::Route do
 
     it 'Params' do
       path = '/wildcard/section/sub_section/action/123'
-      
+
       route = route_for path
 
       route.pattern.must_equal '/wildcard/*/action/:id'

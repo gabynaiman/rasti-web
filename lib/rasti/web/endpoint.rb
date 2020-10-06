@@ -1,7 +1,7 @@
 module Rasti
   module Web
     class Endpoint
-      
+
       def initialize(&block)
         @block = block
       end

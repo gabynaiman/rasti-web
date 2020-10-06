@@ -5,7 +5,7 @@ describe Rasti::Web::Template do
   class Context
     include ContextMethodHelper
   end
-  
+
   it 'Plain HTML' do
     Rasti::Web::Template.render('plain_html').must_equal '<div>Hello world</div>'
   end

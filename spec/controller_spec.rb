@@ -1,7 +1,7 @@
 require 'minitest_helper'
 
 class TestController < Rasti::Web::Controller
-  
+
   CustomError = Class.new StandardError
 
   def self.hooks_log
@@ -16,14 +16,14 @@ class TestController < Rasti::Web::Controller
     self.class.hooks_log << "After all: #{action_name}"
   end
 
-  before_action :test do 
+  before_action :test do
     self.class.hooks_log << 'Before single: test'
   end
 
-  after_action :test do 
+  after_action :test do
     self.class.hooks_log << 'After single: test'
   end
-  
+
   def test
     render.html 'Test HTML'
   end
@@ -55,7 +55,7 @@ describe Rasti::Web::Controller do
   before do
     TestController.hooks_log.clear
   end
-  
+
   it 'Action endpoint' do
     action = TestController.action :test
     env = Rack::MockRequest.env_for '/test'
@@ -65,7 +65,7 @@ describe Rasti::Web::Controller do
     status.must_equal 200
     headers['Content-Type'].must_equal 'text/html; charset=utf-8'
     response.body.must_equal ['Test HTML']
-    
+
     TestController.hooks_log.must_equal [
       'Before single: test',
       'After single: test'
@@ -109,7 +109,7 @@ describe Rasti::Web::Controller do
   it 'Unexpected exception' do
     action = TestController.action :exception
     env = Rack::MockRequest.env_for '/exception'
-    
+
     error = proc { action.call env }.must_raise RuntimeError
     error.message.must_equal 'Unexpected error'
 

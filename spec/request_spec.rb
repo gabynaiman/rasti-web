@@ -1,7 +1,7 @@
 require 'minitest_helper'
 
 describe Rasti::Web::Request do
-  
+
   it 'Route params' do
     env = Rack::MockRequest.env_for '/10/20'
     env[Rasti::Web::ROUTE_PARAMS] = {'lat' => '10', 'lon' => '20'}

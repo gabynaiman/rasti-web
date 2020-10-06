@@ -8,7 +8,7 @@ class TestMiddleware
   def call(env)
     if env['PATH_INFO'] == '/private'
       [403, {}, ['Permission denied']]
-    else      
+    else
       @app.call env
     end
   end
@@ -50,7 +50,7 @@ describe Rasti::Web::Application do
 
   it 'Defined route' do
     get '/'
-    
+
     last_response.status.must_equal 200
     last_response['Content-Type'].must_equal 'text/html; charset=utf-8'
     last_response.body.must_equal 'Page content'
@@ -58,7 +58,7 @@ describe Rasti::Web::Application do
 
   it 'Not found' do
     get '/not_found'
-    
+
     last_response.status.must_equal 404
     last_response.body.must_equal 'Page not found'
   end
@@ -77,5 +77,5 @@ describe Rasti::Web::Application do
     last_response['Content-Type'].must_equal 'application/json; charset=utf-8'
     last_response.body.must_equal '{"id":123}'
   end
-  
+
 end

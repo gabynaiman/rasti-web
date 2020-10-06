@@ -11,7 +11,7 @@ describe Rasti::Web::Router do
   def post(path)
     Rack::MockRequest.env_for path, method: :post
   end
-  
+
   it 'Verbs' do
     %w(delete get head options patch post put).each do |verb|
       router.must_respond_to verb

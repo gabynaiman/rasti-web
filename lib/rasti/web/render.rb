@@ -11,38 +11,38 @@ module Rasti
       end
 
       def status(status, *args)
-        respond_with status, 
-                     extract_headers(args), 
+        respond_with status,
+                     extract_headers(args),
                      extract_body(args)
       end
 
       def text(text, *args)
-        respond_with extract_status(args), 
-                     extract_headers(args).merge('Content-Type' => 'text/plain; charset=utf-8'), 
+        respond_with extract_status(args),
+                     extract_headers(args).merge('Content-Type' => 'text/plain; charset=utf-8'),
                      text
       end
 
       def html(html, *args)
-        respond_with extract_status(args), 
-                     extract_headers(args).merge('Content-Type' => 'text/html; charset=utf-8'), 
+        respond_with extract_status(args),
+                     extract_headers(args).merge('Content-Type' => 'text/html; charset=utf-8'),
                      html
       end
 
       def json(object, *args)
-        respond_with extract_status(args), 
-                     extract_headers(args).merge('Content-Type' => 'application/json; charset=utf-8'), 
+        respond_with extract_status(args),
+                     extract_headers(args).merge('Content-Type' => 'application/json; charset=utf-8'),
                      object.is_a?(String) ? object : JSON.dump(object)
       end
 
       def js(script, *args)
-        respond_with extract_status(args), 
-                     extract_headers(args).merge('Content-Type' => 'application/javascript; charset=utf-8'), 
+        respond_with extract_status(args),
+                     extract_headers(args).merge('Content-Type' => 'application/javascript; charset=utf-8'),
                      script
       end
 
       def css(stylesheet, *args)
-        respond_with extract_status(args), 
-                     extract_headers(args).merge('Content-Type' => 'text/css; charset=utf-8'), 
+        respond_with extract_status(args),
+                     extract_headers(args).merge('Content-Type' => 'text/css; charset=utf-8'),
                      stylesheet
       end
 
@@ -50,8 +50,8 @@ module Rasti
         content_type = MIME::Types.of(filename).first.content_type
         body = File.read filename
 
-        respond_with extract_status(args), 
-                     extract_headers(args).merge('Content-Type' => content_type), 
+        respond_with extract_status(args),
+                     extract_headers(args).merge('Content-Type' => content_type),
                      body
       end
 
@@ -63,7 +63,7 @@ module Rasti
       def layout(template=nil, &block)
         content = block.call if block
         layout = view_context.render(template || Web.default_layout) { content }
-        
+
         response['Content-Type'] = 'text/html; charset=utf-8'
         response.write layout
       end

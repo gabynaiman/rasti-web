@@ -8,7 +8,7 @@ describe Rasti::Web::Endpoint do
       res.must_be_instance_of Rack::Response
 
       render.text 'Content'
-    end    
+    end
 
     env = Rack::MockRequest.env_for '/'
 

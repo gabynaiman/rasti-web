@@ -7,7 +7,7 @@ module Rasti
         template_file = files.detect { |f| File.exists? f }
 
         raise "Missing template #{template} [#{files.join(', ')}]" unless template_file
-                                  
+
         tilt = cache.fetch(template_file) { Tilt.new template_file }
         tilt.render(context, locals, &block)
       end
@@ -17,7 +17,7 @@ module Rasti
       def self.cache
         Thread.current[:templates_cache] ||= Tilt::Cache.new
       end
-      
+
     end
   end
 end

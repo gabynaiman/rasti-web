@@ -12,7 +12,7 @@ module Rasti
       end
 
       def body_text
-        @body_text ||= begin 
+        @body_text ||= begin
           text = body.read
           body.rewind
           text
@@ -20,8 +20,8 @@ module Rasti
       end
 
       def json?
-        !content_type.nil? && ContentType.parse(content_type).mime_type == 'application/json' 
-      rescue 
+        !content_type.nil? && ContentType.parse(content_type).mime_type == 'application/json'
+      rescue
         false
       end
 

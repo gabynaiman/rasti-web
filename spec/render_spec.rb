@@ -10,7 +10,7 @@ describe Rasti::Web::Render do
 
     it 'Code' do
       render.status 404
-      
+
       response.status.must_equal 404
       response['Content-Type'].must_be_nil
       response.body.must_equal []
@@ -18,7 +18,7 @@ describe Rasti::Web::Render do
 
     it 'Code and body' do
       render.status 500, 'Internal server error'
-      
+
       response.status.must_equal 500
       response['Content-Type'].must_be_nil
       response.body.must_equal ['Internal server error']
@@ -167,7 +167,7 @@ describe Rasti::Web::Render do
   end
 
   describe 'Javascript' do
-    
+
     it 'Body' do
       render.js 'alert("hello");'
 
@@ -205,7 +205,7 @@ describe Rasti::Web::Render do
   end
 
   describe 'CSS' do
-    
+
     it 'Body' do
       render.css 'body{margin:0}'
 
@@ -291,7 +291,7 @@ describe Rasti::Web::Render do
   end
 
   describe 'Layout' do
-    
+
     it 'Default' do
       render.layout { 'Page content' }
 
@@ -322,7 +322,7 @@ describe Rasti::Web::Render do
 
     it 'Default layout' do
       render.view 'context_and_locals', title: 'Welcome', text: 'Hello world'
-      
+
       response.status.must_equal 200
       response['Content-Type'].must_equal 'text/html; charset=utf-8'
       response.body.must_equal ['<html><body><h1>Welcome</h1><div>Hello world</div></body></html>']
@@ -330,7 +330,7 @@ describe Rasti::Web::Render do
 
     it 'Custom layout' do
       render.view 'context_and_locals', {title: 'Welcome', text: 'Hello world'}, 'custom_layout'
-      
+
       response.status.must_equal 200
       response['Content-Type'].must_equal 'text/html; charset=utf-8'
       response.body.must_equal ['<html><body class="custom"><h1>Welcome</h1><div>Hello world</div></body></html>']
