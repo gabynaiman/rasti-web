@@ -251,6 +251,7 @@ describe Rasti::Web::Render do
 
       response.status.must_equal 200
       response['Content-Type'].must_equal 'application/zip'
+      response['Content-Disposition'].must_equal 'attachment; filename="sample_file.zip"'
       response.body.must_equal [File.read(filename)]
     end
 
@@ -259,6 +260,7 @@ describe Rasti::Web::Render do
 
       response.status.must_equal 206
       response['Content-Type'].must_equal 'application/zip'
+      response['Content-Disposition'].must_equal 'attachment; filename="sample_file.zip"'
       response.body.must_equal [File.read(filename)]
     end
 

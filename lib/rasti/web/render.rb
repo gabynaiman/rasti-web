@@ -47,12 +47,14 @@ module Rasti
       end
 
       def file(filename, *args)
-        content_type = MIME::Types.of(filename).first.content_type
-        body = File.read filename
+        headers = {
+          'Content-Type' => MIME::Types.of(filename).first.content_type,
+          'Content-Disposition' => "attachment; filename=\"#{File.basename(filename)}\""
+        }
 
         respond_with extract_status(args),
-                     extract_headers(args).merge('Content-Type' => content_type),
-                     body
+                     headers.merge(extract_headers(args)),
+                     File.read(filename)
       end
 
       def partial(template, locals={})
