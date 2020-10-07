@@ -4,7 +4,6 @@
 [![Build Status](https://travis-ci.org/gabynaiman/rasti-web.svg?branch=master)](https://travis-ci.org/gabynaiman/rasti-web)
 [![Coverage Status](https://coveralls.io/repos/gabynaiman/rasti-web/badge.svg?branch=master)](https://coveralls.io/r/gabynaiman/rasti-web?branch=master)
 [![Code Climate](https://codeclimate.com/github/gabynaiman/rasti-web.svg)](https://codeclimate.com/github/gabynaiman/rasti-web)
-[![Dependency Status](https://gemnasium.com/gabynaiman/rasti-web.svg)](https://gemnasium.com/gabynaiman/rasti-web)
 
 Web blocks to build robust applications
 
