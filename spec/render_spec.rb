@@ -250,7 +250,7 @@ describe Rasti::Web::Render do
       render.file filename
 
       response.status.must_equal 200
-      response['Content-Type'].must_equal 'application/zip'
+      response['Content-Type'].must_equal 'application/zip; charset=utf-8'
       response['Content-Disposition'].must_equal 'attachment; filename="sample_file.zip"'
       response.body.must_equal [File.read(filename)]
     end
@@ -259,7 +259,7 @@ describe Rasti::Web::Render do
       render.file filename, 206
 
       response.status.must_equal 206
-      response['Content-Type'].must_equal 'application/zip'
+      response['Content-Type'].must_equal 'application/zip; charset=utf-8'
       response['Content-Disposition'].must_equal 'attachment; filename="sample_file.zip"'
       response.body.must_equal [File.read(filename)]
     end
@@ -268,7 +268,7 @@ describe Rasti::Web::Render do
       render.file filename, 'Content-Disposition' => 'attachment; filename=test_file.zip'
 
       response.status.must_equal 200
-      response['Content-Type'].must_equal 'application/zip'
+      response['Content-Type'].must_equal 'application/zip; charset=utf-8'
       response['Content-Disposition'].must_equal 'attachment; filename=test_file.zip'
       response.body.must_equal [File.read(filename)]
     end
@@ -277,7 +277,7 @@ describe Rasti::Web::Render do
       render.file filename, 206, 'Content-Disposition' => 'attachment; filename=test_file.zip'
 
       response.status.must_equal 206
-      response['Content-Type'].must_equal 'application/zip'
+      response['Content-Type'].must_equal 'application/zip; charset=utf-8'
       response['Content-Disposition'].must_equal 'attachment; filename=test_file.zip'
       response.body.must_equal [File.read(filename)]
     end

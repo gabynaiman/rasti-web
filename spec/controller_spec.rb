@@ -84,6 +84,7 @@ describe Rasti::Web::Controller do
     status, headers, response = action.call env
 
     status.must_equal 500
+    headers['Content-Type'].must_be_nil
     response.body.must_equal ['Explicit error']
 
     TestController.hooks_log.must_equal [
@@ -98,6 +99,7 @@ describe Rasti::Web::Controller do
     status, headers, response = action.call env
 
     status.must_equal 500
+    headers['Content-Type'].must_be_nil
     response.body.must_equal ['Implicit error']
 
     TestController.hooks_log.must_equal [

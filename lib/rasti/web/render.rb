@@ -18,47 +18,42 @@ module Rasti
 
       def text(text, *args)
         respond_with extract_status(args),
-                     extract_headers(args).merge('Content-Type' => 'text/plain; charset=utf-8'),
+                     extract_headers(args).merge(Headers.for_text),
                      text
       end
 
       def html(html, *args)
         respond_with extract_status(args),
-                     extract_headers(args).merge('Content-Type' => 'text/html; charset=utf-8'),
+                     extract_headers(args).merge(Headers.for_html),
                      html
       end
 
       def json(object, *args)
         respond_with extract_status(args),
-                     extract_headers(args).merge('Content-Type' => 'application/json; charset=utf-8'),
+                     extract_headers(args).merge(Headers.for_json),
                      object.is_a?(String) ? object : JSON.dump(object)
       end
 
       def js(script, *args)
         respond_with extract_status(args),
-                     extract_headers(args).merge('Content-Type' => 'application/javascript; charset=utf-8'),
+                     extract_headers(args).merge(Headers.for_js),
                      script
       end
 
       def css(stylesheet, *args)
         respond_with extract_status(args),
-                     extract_headers(args).merge('Content-Type' => 'text/css; charset=utf-8'),
+                     extract_headers(args).merge(Headers.for_css),
                      stylesheet
       end
 
       def file(filename, *args)
-        headers = {
-          'Content-Type' => MIME::Types.of(filename).first.content_type,
-          'Content-Disposition' => "attachment; filename=\"#{File.basename(filename)}\""
-        }
-
         respond_with extract_status(args),
-                     headers.merge(extract_headers(args)),
+                     Headers.for_file(filename).merge(extract_headers(args)),
                      File.read(filename)
       end
 
       def partial(template, locals={})
-        response['Content-Type'] = 'text/html; charset=utf-8'
+        response.headers.merge! Headers.for_html
         response.write view_context.render(template, locals)
       end
 
@@ -66,7 +61,7 @@ module Rasti
         content = block.call if block
         layout = view_context.render(template || Web.default_layout) { content }
 
-        response['Content-Type'] = 'text/html; charset=utf-8'
+        response.headers.merge! Headers.for_html
         response.write layout
       end
 
