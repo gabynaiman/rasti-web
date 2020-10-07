@@ -52,6 +52,12 @@ module Rasti
                      File.read(filename)
       end
 
+      def data(content, *args)
+        respond_with extract_status(args),
+                     extract_headers(args),
+                     content
+      end
+
       def partial(template, locals={})
         response.headers.merge! Headers.for_html
         response.write view_context.render(template, locals)

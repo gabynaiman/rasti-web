@@ -284,6 +284,46 @@ describe Rasti::Web::Render do
 
   end
 
+  describe 'Data' do
+
+    let(:content) { 'Response data' }
+
+    it 'Body' do
+      render.data content
+
+      response.status.must_equal 200
+      response['Content-Type'].must_be_nil
+      response.body.must_equal [content]
+    end
+
+    it 'Body and status' do
+      render.data content, 206
+
+      response.status.must_equal 206
+      response['Content-Type'].must_be_nil
+      response.body.must_equal [content]
+    end
+
+    it 'Body and headers' do
+      render.data content, Rasti::Web::Headers.for_file('test_file.txt')
+
+      response.status.must_equal 200
+      response['Content-Type'].must_equal 'text/plain; charset=utf-8'
+      response['Content-Disposition'].must_equal 'attachment; filename="test_file.txt"'
+      response.body.must_equal [content]
+    end
+
+    it 'Body, status and headers' do
+      render.data content, 206, Rasti::Web::Headers.for_file('test_file.txt')
+
+      response.status.must_equal 206
+      response['Content-Type'].must_equal 'text/plain; charset=utf-8'
+      response['Content-Disposition'].must_equal 'attachment; filename="test_file.txt"'
+      response.body.must_equal [content]
+    end
+
+  end
+
   it 'Partial' do
     render.partial 'context_and_locals', title: 'Welcome', text: 'Hello world'
 
