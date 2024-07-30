@@ -1,8 +1,8 @@
 # Rasti::Web
 
 [![Gem Version](https://badge.fury.io/rb/rasti-web.svg)](https://rubygems.org/gems/rasti-web)
-[![Build Status](https://travis-ci.org/gabynaiman/rasti-web.svg?branch=master)](https://travis-ci.org/gabynaiman/rasti-web)
-[![Coverage Status](https://coveralls.io/repos/gabynaiman/rasti-web/badge.svg?branch=master)](https://coveralls.io/r/gabynaiman/rasti-web?branch=master)
+[![CI](https://github.com/gabynaiman/rasti-web/actions/workflows/ci.yml/badge.svg)](https://github.com/gabynaiman/rasti-web/actions/workflows/ci.yml)
+[![Coverage Status](https://coveralls.io/repos/github/gabynaiman/rasti-web/badge.svg?branch=master)](https://coveralls.io/github/gabynaiman/rasti-web?branch=master)
 [![Code Climate](https://codeclimate.com/github/gabynaiman/rasti-web.svg)](https://codeclimate.com/github/gabynaiman/rasti-web)
 
 Web blocks to build robust applications
