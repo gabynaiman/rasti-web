@@ -707,6 +707,46 @@ require_relative 'app'
 run WebApp
 ```
 
+## Running Tests
+
+Run all tests:
+
+```bash
+rake spec
+# or simply
+rake
+```
+
+Run tests from a specific directory:
+
+```bash
+DIR=spec/web rake spec
+```
+
+Run a specific test file:
+
+```bash
+TEST=spec/endpoint_spec.rb rake spec
+```
+
+Run tests from a specific line in a file:
+
+```bash
+TEST=spec/endpoint_spec.rb:45 rake spec
+```
+
+Run tests matching a name pattern:
+
+```bash
+NAME=render rake spec
+```
+
+You can combine options:
+
+```bash
+DIR=spec/web NAME=controller rake spec
+```
+
 ## Contributing
 
 1. Fork it ( https://github.com/gabynaiman/rasti-web/fork )
