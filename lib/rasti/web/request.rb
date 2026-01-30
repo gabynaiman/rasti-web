@@ -7,7 +7,7 @@ module Rasti
           hash.update self.GET
           hash.update self.POST
           hash.update env[ROUTE_PARAMS] if env.key? ROUTE_PARAMS
-          hash.update JSON.parse(body_text) if json? && body_text
+          hash.update JSON.parse(body_text) if json? && body_text && !body_text.empty?
         end
       end
 
